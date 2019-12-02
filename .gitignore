@@ -1,0 +1,8 @@
+# Ada
+*.ads
+*.ali
+*.o
+*.adb.stderr
+*.adb.stdout
+*.bexch
+b__*
