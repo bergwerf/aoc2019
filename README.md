@@ -33,3 +33,18 @@ convenient language on one of the more difficult days ;D.
 23. Elm
 24. Julia
 25. Raku
+
+After a while I decided to write down one thing I like and one thing I dislike
+about each language. This only represents the experience I gained from solving
+one problem in that language (and doesn't characterize my opinion about the
+whole language).
+
+1. Ada
+   * like: `:=` for assignments (more mathematical and frees `=` for comparison)
+   * dislike: no functional array utilities like `map` and `reduce`
+2. Crystal
+   * like: built-in list comparison with `<=>` (this is a common use-case)
+   * dislike: unfamiliar closure syntax `{ |x| x + 1 }`
+3. Fortran
+   * like: `!` for comments (my brain is programmed to prioritize exclamations)
+   * dislike: no dynamic string manipulation utilities
