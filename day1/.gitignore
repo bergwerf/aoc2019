@@ -1,1 +1,8 @@
 day1
+*.ads
+*.ali
+*.o
+*.adb.stderr
+*.adb.stdout
+*.bexch
+b__*
