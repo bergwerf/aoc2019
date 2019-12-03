@@ -10,8 +10,8 @@ convenient language on one of the more difficult days ;D.
 
 1. Ada (GNAT 8.3.0)
 2. Crystal (0.31.1)
-3. Fortran (GFortan)
-4. ALGOL (Algol68G)
+3. Fortran 95 (GFortan 8.3.0)
+4. ALGOL 68 (Algol68G)
 5. COBOL (GnuCOBOL)
 6. APL (GNU APL)
 7. BASIC (FreeBASIC)
