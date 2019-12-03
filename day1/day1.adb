@@ -1,5 +1,3 @@
--- Day 1 in Ada
-
 with Ada.strings, Ada.text_io;
 use Ada.strings, Ada.text_io;
 

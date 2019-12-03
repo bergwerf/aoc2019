@@ -1,5 +1,3 @@
-# Day 2 in the Crystal language.
-
 require "spec"
 
 # Tape adaptation
