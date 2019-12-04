@@ -12,7 +12,7 @@ section .data
   ; instructions (translated to full instructions later).
   lower:     dd 172930
   upper:     dd 683082
-	message:   db 'Passwords: %d', 10, 0 ; null-terminated string (10 = \n)
+  message:   db 'Passwords: %d', 10, 0 ; null-terminated string (10 = \n)
 
 section .text
 
@@ -30,8 +30,9 @@ loop:
   ; + At least two adjacent digits are the same.
   ; + The digits never decrease.
   mov     eax, edi  ; Copy current password to eax (to extract digits).
+  mov     r9d, 1    ; Current number of repeated digits (part 2)
   mov     r10d, 0   ; 0 -> initial; 1 -> adjacent found
-  mov     r11d, 10  ; Store previous digit or 10 (from the least significant).
+  mov     r11d, 10  ; Previous digit or 10 (from the least significant)
 
 extract_next_digit:
   ; Extract current digit (mod 10), note that eax already contains the number.
@@ -46,12 +47,22 @@ extract_next_digit:
 check1:
   ; Compare with previous digit.
   cmp     edx, r11d
-  je      equal_digit
-  jmp     check2
+  jne     unequal_digit
 
 equal_digit:
   ; We found a matching adjacent digit.
+  inc     r9d
+  jmp     check2
+
+unequal_digit:
+  ; Set r10d if we just passed 2 repeated digits
+  cmp     r9d, 2
+  jne     reset_repeat
   mov     r10d, 1
+
+reset_repeat:
+  ; Reset digit repeat.
+  mov     r9d, 1
 
 check2:
   ; Compare with previous digit again.
@@ -64,10 +75,15 @@ digit_ok:
   cmp      eax, 0    ; Check if there are any digits left (iff eax != 0).
   jne      extract_next_digit
 
-  ; All digits were passed. Increment valid password counter if adjacent
-  ; matching digits were found.
+  ; All digits were passed. Check double repeat flag.
   cmp      r10d, 1
+  je       password_valid
+
+  ; Check if the repeat flag is currently 2.
+  cmp      r9d, 2
   jne      next_password
+
+password_valid:
   inc      esi
 
   ; Print current password (for debugging)
@@ -75,8 +91,10 @@ digit_ok:
   push     rsi
   push     rdi
   push     r8
+  push     r9
   push     r10
   push     r11
+  push     r12
 
   ; Note that the order of setting printf arguments matters here!
   mov      esi, edi
@@ -84,8 +102,10 @@ digit_ok:
   mov      rax, 0
   call     printf
 
+  pop      r12
   pop      r11
   pop      r10
+  pop      r9
   pop      r8
   pop      rdi
   pop      rsi
