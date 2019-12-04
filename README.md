@@ -11,7 +11,7 @@ keep using new languages. These are more or less in chronological order.
 1. Ada (GNAT 8.3.0)
 2. Crystal (0.31.1)
 3. Fortran 95 (GFortan 8.3.0)
-4. x86 (NASM)
+4. x86 (NASM 2.14)
 5. ALGOL 68 (Algol68G 2.8.4)
 6. COBOL (GnuCOBOL)
 7. APL (GNU APL)
