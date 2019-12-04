@@ -55,7 +55,7 @@ equal_digit:
   jmp     check2
 
 unequal_digit:
-  ; Set r10d if we just passed 2 repeated digits
+  ; Set r10d if we just passed 2 repeated digits.
   cmp     r9d, 2
   jne     reset_repeat
   mov     r10d, 1
