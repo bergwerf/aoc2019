@@ -5,22 +5,22 @@ opportunity to do so!
 
 Languages
 ---------
-I determined these languages ahead of time. If I am lucky I'll get a less
-convenient language on one of the more difficult days ;D.
+After using Ada and Crystal for the first two days I decided it would be fun to
+keep using new languages. These are more or less in chronological order.
 
 1. Ada (GNAT 8.3.0)
 2. Crystal (0.31.1)
 3. Fortran 95 (GFortan 8.3.0)
-4. ALGOL 68 (Algol68G)
-5. COBOL (GnuCOBOL)
-6. APL (GNU APL)
-7. BASIC (FreeBASIC)
-8. Forth (FreeForth2)
-9. Pascal (Free Pascal)
-10. Smalltalk (GNU Smalltalk)
-11. Prolog (SWI-Prolog)
-12. TeX (TeX Live)
-13. x86 (NASM)
+4. x86 (NASM)
+5. ALGOL 68 (Algol68G 2.8.4)
+6. COBOL (GnuCOBOL)
+7. APL (GNU APL)
+8. BASIC (FreeBASIC)
+9. Forth (FreeForth2)
+10. Pascal (Free Pascal)
+11. Smalltalk (GNU Smalltalk)
+12. Prolog (SWI-Prolog)
+13. TeX (TeX Live)
 14. AWK (GNU Awk 4.2.1)
 15. PostScript (any PDF viewer)
 16. Haskell
