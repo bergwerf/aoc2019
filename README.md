@@ -6,14 +6,14 @@ opportunity to do so!
 Languages
 ---------
 After using Ada and Crystal for the first two days I decided it would be fun to
-keep using new languages. These are more or less in chronological order.
+keep using new languages.
 
 1. Ada (GNAT 8.3.0)
 2. Crystal (0.31.1)
 3. Fortran 95 (GFortan 8.3.0)
 4. x86 (NASM 2.14)
 5. ALGOL 68 (Algol68G 2.8.4)
-6. COBOL (GnuCOBOL)
+6. COBOL (GnuCOBOL 2.2.0)
 7. APL (GNU APL)
 8. BASIC (FreeBASIC)
 9. Forth (FreeForth2)
