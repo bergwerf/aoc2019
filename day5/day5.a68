@@ -1,30 +1,188 @@
 # HTML documentation for easier searching: #
 # https://jmvdveer.home.xs4all.nl/en.post.algol-68-revised-report.html #
 
+# Append item to string array. #
+OP +:= = (REF FLEX[]STRING array, STRING item) VOID:
+  BEGIN
+    [LWB(array):UPB(array) + 1]STRING new array;
+    new array[LWB(array):UPB(array)] := array;
+    new array[UPB(new array)] := item;
+    array := new array;
+    sweep heap
+  END;
+
+# Split string, see: https://rosettacode.org/wiki/Tokenize_a_string #
+PROC split = (REF STRING input, STRING separator) []STRING:
+  BEGIN
+    FLEX[1:0]STRING output;
+    # Find each separator. #
+    INT offset := LWB(input), pos;
+    WHILE string in string(separator, pos, input[offset:]) DO
+      output +:= STRING(input[offset:(offset + pos - 2)]);
+      offset +:= (pos - 1) + UPB(separator)
+    OD;
+    output +:= STRING(input[offset:]);
+    output
+  END;
+
+# Map string to integer converter over an array. #
+PROC map = (REF FLEX[]STRING array, PROC (REF STRING) INT fn) []INT:
+  BEGIN
+    [1:UPB(array)]INT output;
+    FOR i TO UPB(array) DO
+      STRING str := array[i];
+      output[i] := fn(str)
+    OD;
+    output
+  END;
+
+# Convert string to integer #
+PROC to int = (REF STRING str) INT:
+  BEGIN
+    INT i;
+    FILE mem;
+    associate(mem, str);
+    getf(mem, ($g$, i));
+    close(mem);
+    i
+  END;
+
+# Simulate Intcode computer. #
+PROC run intcodes = (REF FLEX[]INT tape, PROC (INT) INT input, PROC (INT) VOID output) VOID:
+  BEGIN
+    # Get value from tape. #
+    PROC get = (INT mode, INT i) INT:
+      # Note that the computer is zero indexed. #
+      IF mode = 0 THEN tape[i + 1] ELSE i FI;
+    
+    # Store value on tape. #
+    PROC store = (INT i, INT v) VOID:
+      tape[i + 1] := v;
+    
+    BOOL logging := TRUE;
+    PROC log = ([]UNION(INT, FORMAT) x) VOID:
+      IF logging THEN printf(x) FI;
+
+    INT seq := 1;
+    INT ptr := LWB(tape);
+    WHILE tape[ptr] /= 99 DO
+      sweep heap;
+
+      # Extract current instruction. #
+      INT code := tape[ptr];
+      [1:5]INT op := (0, 0, 0, 0, 0);
+      FOR i TO UPB(op) DO
+        op[i] := code MOD 10;
+        code := code % 10
+      OD;
+
+      # Execute instruction. #
+      CASE op[1] IN
+        # 1: C <- A + B #
+        BEGIN
+          INT a := get(op[3], tape[ptr + 1]);
+          INT b := get(op[4], tape[ptr + 2]);
+          INT c := tape[ptr + 3];
+          log(($"add ",g,g,gl$, a, b, c));
+          store(c, a + b);
+          ptr +:= 4
+        END,
+        # 2: C <- A * B #
+        BEGIN
+          INT a := get(op[3], tape[ptr + 1]);
+          INT b := get(op[4], tape[ptr + 2]);
+          INT c := tape[ptr + 3];
+          log(($"mul ",g,g,gl$, a, b, c));
+          store(c, a * b);
+          ptr +:= 4
+        END,
+        # 3: A <- input #
+        BEGIN
+          INT a := tape[ptr + 1];
+          log(($"inp ",gl$, a));
+          store(a, input(seq));
+          seq +:= 1; ptr +:= 2
+        END,
+        # 4: output <- A #
+        BEGIN
+          log(($"out",l$));
+          output(get(op[3], tape[ptr + 1]));
+          ptr +:= 2
+        END,
+        # 5: A > 0 -> ptr := B #
+        BEGIN
+          INT a := get(op[3], tape[ptr + 1]);
+          INT b := get(op[4], tape[ptr + 2]);
+          log(($"jnz ",g,gl$, a, b));
+          IF a > 0 THEN
+            ptr := b + 1
+          ELSE
+            ptr +:= 3
+          FI
+        END,
+        # 6: A = 0 -> ptr := B #
+        BEGIN
+          INT a := get(op[3], tape[ptr + 1]);
+          INT b := get(op[4], tape[ptr + 2]);
+          log(($"jez ",g,gl$, a, b));
+          IF a = 0 THEN
+            ptr := b + 1
+          ELSE
+            ptr +:= 3
+          FI
+        END,
+        # 7: C <- A < B #
+        BEGIN
+          INT a := get(op[3], tape[ptr + 1]);
+          INT b := get(op[4], tape[ptr + 2]);
+          INT c := tape[ptr + 3];
+          log(($"?lt ",g,g,gl$, a, b, c));
+          store(c, IF a < b THEN 1 ELSE 0 FI);
+          ptr +:= 4
+        END,
+        # 8: C <- A = B #
+        BEGIN
+          INT a := get(op[3], tape[ptr + 1]);
+          INT b := get(op[4], tape[ptr + 2]);
+          INT c := tape[ptr + 3];
+          log(($"?eq ",g,g,gl$, a, b, c));
+          store(c, IF a = b THEN 1 ELSE 0 FI);
+          ptr +:= 4
+        END
+      OUT
+        printf(($"Unknown opcode: ",z," at ",3zl$, op[1], ptr));
+        GOTO finished
+      ESAC
+    OD;
+finished:
+    SKIP
+  END;
+
 # Classic ALGOL 68 thinks of files as pages with lines of characters: #
 # MODE BOOK = FLEX[0]FLEX[0]FLEX[0]CHAR #
 # (MODE defines a new data type) #
 
-# Read input file (ALGOL allows whitespaces in variable names) #
-# Fun fact, ALGOL is defined using a vW-grammar. #
-STRING data;
+STRING test program := "3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,\
+1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,\
+999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99";
+
+# Read input file (ALGOL 68 allows whitespaces in variable names) #
+# Fun fact, ALGOL 68 is defined using a vW-grammar. #
+STRING input program;
 FILE file handle;
 open(file handle, "input.txt", stand in channel);
-INT password start, password end;
-getf(file handle, ($6z"-",6z$, password start, password end));
+get(file handle, input program);
 close(file handle);
 
-# + A format string is enclosed with dollar signs. #
-# + `{n}a` means take the *n* next characters of a string. #
-# + `l` inserts a newline. #
-printf(($"Input: "6z", ",6zl$, password start, password end));
+# Split string using split procedure. #
+FLEX[1:0]STRING parts := split(input program, ",");
+FLEX[1:0]INT tape := map(parts, to int);
+printf(($"Loaded ",3z" integers"l$, UPB(tape)));
 
-# Solve using a brute-force search. #
-INT n;
-n := 0;
+# Define input and output interface. #
+FLEX[1:0]INT input tape := (5);
+PROC input = (INT seq) INT: input tape[seq];
+PROC output print = (INT i) VOID: printf(($gl$, i));
 
-# Genie runs out of memory here #
-FOR i FROM password start TO password end
-DO
-  printf(($6zl$, i))
-OD
+# Run program. #
+run intcodes(tape, input, output print)

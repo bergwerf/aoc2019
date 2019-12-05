@@ -48,3 +48,9 @@ whole language).
 3. Fortran
    * like: `!` for comments (my brain is programmed to prioritize exclamations)
    * dislike: no dynamic string manipulation utilities
+4. x86 assembly
+   * like: now I can finally say I also did assembly once
+   * dislike: historical register names like rsi, rdi (source/destination index)
+5. ALGOL 68
+   * like: feels almost like a modern language!
+   * dislike: semicolon as infix operator
