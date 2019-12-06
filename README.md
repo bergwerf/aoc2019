@@ -54,3 +54,6 @@ whole language).
 5. ALGOL 68
    * like: feels almost like a modern language!
    * dislike: semicolon as infix operator
+6. COBOL
+   * like: built-in SEARCH statement is progressive (for its time)
+   * dislike: data type system is not intuitive from todays perspective
